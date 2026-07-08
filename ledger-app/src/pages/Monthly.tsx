@@ -87,6 +87,30 @@ export function Monthly() {
           </div>
         </div>
       </section>
+      <div className="bg-surface-container-low p-4 rounded-2xl">
+          <span className="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant block mb-1">
+            Débito / Crédito
+          </span>
+          <div className="text-sm font-data font-bold text-on-surface">
+            {formatCurrency(totals.debitoTotal)} <span className="text-on-surface-variant font-body">/</span>{' '}
+            {formatCurrency(totals.creditoTotal)}
+          </div>
+        </div>
+      </section>
+
+      <div className="bg-brand-blue/10 p-4 rounded-2xl flex items-center justify-between">
+        <div>
+          <span className="text-[11px] font-bold uppercase tracking-wider text-brand-blue block mb-1">
+            Saldo Acumulado
+          </span>
+          <span className="text-[11px] text-on-surface-variant">
+            Saldo anterior ({formatCurrency(totals.saldoAnterior)}) + saldo deste mês
+          </span>
+        </div>
+        <div className="text-lg font-data font-bold text-brand-blue truncate">
+          {formatCurrency(totals.saldoAcumulado)}
+        </div>
+      </div>
 
       <div className="grid grid-cols-2 gap-3">
         <button
