@@ -51,7 +51,7 @@ export function Dashboard() {
             Saldo Atual
           </span>
           <div className="text-xl font-data font-bold text-on-surface truncate">
-            {formatCurrency(totals.saldo)}
+            {formatCurrency(totals.saldoAcumulado)}
           </div>
         </div>
         <div className="bg-brand-red/10 p-4 rounded-2xl">
