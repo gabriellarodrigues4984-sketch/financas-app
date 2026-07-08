@@ -87,16 +87,6 @@ export function Monthly() {
           </div>
         </div>
       </section>
-      <div className="bg-surface-container-low p-4 rounded-2xl">
-          <span className="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant block mb-1">
-            Débito / Crédito
-          </span>
-          <div className="text-sm font-data font-bold text-on-surface">
-            {formatCurrency(totals.debitoTotal)} <span className="text-on-surface-variant font-body">/</span>{' '}
-            {formatCurrency(totals.creditoTotal)}
-          </div>
-        </div>
-      </section>
 
       <div className="bg-brand-blue/10 p-4 rounded-2xl flex items-center justify-between">
         <div>
