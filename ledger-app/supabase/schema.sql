@@ -1,5 +1,5 @@
 -- ============================================================================
--- Modern Ledger — schema Supabase
+-- Grão Finanças — schema Supabase
 -- Rode este arquivo inteiro em: Supabase Dashboard > SQL Editor > New query
 -- ============================================================================
 
