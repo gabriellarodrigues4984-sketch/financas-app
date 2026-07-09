@@ -18,6 +18,7 @@ export function useMonthData(year: number, monthIndex0: number) {
   const [transactions, setTransactions] = useState<Transaction[]>([])
   const [incomes, setIncomes] = useState<Income[]>([])
   const [fixedCosts, setFixedCosts] = useState<FixedCostWithPayment[]>([])
+  const [saldoAnterior, setSaldoAnterior] = useState(0)
   const [loading, setLoading] = useState(true)
 
   const monthStart = monthKey(year, monthIndex0)
@@ -27,7 +28,7 @@ export function useMonthData(year: number, monthIndex0: number) {
     if (!user) return
     setLoading(true)
 
-    const [txRes, incRes, fcRes, fcpRes] = await Promise.all([
+    const [txRes, incRes, fcRes, fcpRes, prevIncRes, prevTxRes, prevFcpRes] = await Promise.all([
       supabase
         .from('transactions')
         .select('*')
@@ -42,6 +43,11 @@ export function useMonthData(year: number, monthIndex0: number) {
         .order('date', { ascending: false }),
       supabase.from('fixed_costs').select('*').eq('active', true).order('created_at', { ascending: true }),
       supabase.from('fixed_cost_payments').select('*').eq('month', monthStart),
+      // Totais acumulados de todos os meses ANTERIORES ao mês selecionado, para
+      // que o saldo que sobrou (ou faltou) carregue automaticamente para o mês seguinte.
+      supabase.from('incomes').select('amount').lt('date', monthStart),
+      supabase.from('transactions').select('amount').lt('date', monthStart),
+      supabase.from('fixed_cost_payments').select('paid_amount').lt('month', monthStart),
     ])
 
     const payments = fcpRes.data ?? []
@@ -50,9 +56,15 @@ export function useMonthData(year: number, monthIndex0: number) {
       payment: payments.find((p) => p.fixed_cost_id === fc.id) ?? null,
     }))
 
+    const prevIncomes = (prevIncRes.data ?? []).reduce((s, r) => s + Number(r.amount), 0)
+    const prevExpenses =
+      (prevTxRes.data ?? []).reduce((s, r) => s + Number(r.amount), 0) +
+      (prevFcpRes.data ?? []).reduce((s, r) => s + Number(r.paid_amount ?? 0), 0)
+
     setTransactions(txRes.data ?? [])
     setIncomes(incRes.data ?? [])
     setFixedCosts(merged)
+    setSaldoAnterior(prevIncomes - prevExpenses)
     setLoading(false)
   }, [user, monthStart, monthEnd])
 
@@ -208,6 +220,7 @@ export function useMonthData(year: number, monthIndex0: number) {
   const gastosDoMes = fixedCostsTotal + transactionsTotal
   const entradasTotal = incomes.reduce((sum, i) => sum + Number(i.amount), 0)
   const saldo = entradasTotal - gastosDoMes
+  const saldoAcumulado = saldoAnterior + saldo
   const debitoTotal =
     transactions.filter((t) => t.payment_type === 'debito').reduce((s, t) => s + Number(t.amount), 0)
   const creditoTotal =
@@ -249,6 +262,8 @@ export function useMonthData(year: number, monthIndex0: number) {
       gastosDoMes,
       entradasTotal,
       saldo,
+      saldoAnterior,
+      saldoAcumulado,
       debitoTotal,
       creditoTotal,
     },
