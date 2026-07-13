@@ -6,6 +6,7 @@ import { ConnectGoogleScreen } from './components/auth/ConnectGoogleScreen'
 import { Dashboard } from './pages/Dashboard'
 import { Monthly } from './pages/Monthly'
 import { Cards } from './pages/Cards'
+import { CardDetail } from './pages/CardDetail'
 import { Goals } from './pages/Goals'
 
 function Gate() {
@@ -28,6 +29,7 @@ function Gate() {
           <Route path="/" element={<Dashboard />} />
           <Route path="/mensal" element={<Monthly />} />
           <Route path="/cartoes" element={<Cards />} />
+          <Route path="/cartoes/:cardId" element={<CardDetail />} />
           <Route path="/metas" element={<Goals />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

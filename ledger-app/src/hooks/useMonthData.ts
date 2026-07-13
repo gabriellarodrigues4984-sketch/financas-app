@@ -50,16 +50,16 @@ export function useMonthData(year: number, monthIndex0: number) {
       supabase.from('fixed_cost_payments').select('paid_amount').lt('month', monthStart),
     ])
 
-    const payments = fcpRes.data ?? []
-    const merged: FixedCostWithPayment[] = (fcRes.data ?? []).map((fc) => ({
+    const payments: FixedCostPayment[] = fcpRes.data ?? []
+    const merged: FixedCostWithPayment[] = ((fcRes.data ?? []) as FixedCost[]).map((fc) => ({
       ...fc,
       payment: payments.find((p) => p.fixed_cost_id === fc.id) ?? null,
     }))
 
-    const prevIncomes = (prevIncRes.data ?? []).reduce((s, r) => s + Number(r.amount), 0)
+    const prevIncomes = ((prevIncRes.data ?? []) as { amount: number }[]).reduce((s, r) => s + Number(r.amount), 0)
     const prevExpenses =
-      (prevTxRes.data ?? []).reduce((s, r) => s + Number(r.amount), 0) +
-      (prevFcpRes.data ?? []).reduce((s, r) => s + Number(r.paid_amount ?? 0), 0)
+      ((prevTxRes.data ?? []) as { amount: number }[]).reduce((s, r) => s + Number(r.amount), 0) +
+      ((prevFcpRes.data ?? []) as { paid_amount: number | null }[]).reduce((s, r) => s + Number(r.paid_amount ?? 0), 0)
 
     setTransactions(txRes.data ?? [])
     setIncomes(incRes.data ?? [])

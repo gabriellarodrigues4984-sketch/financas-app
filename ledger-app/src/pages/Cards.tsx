@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useData } from '../context/DataContext'
 import { useMonthData } from '../hooks/useMonthData'
 import { formatCurrency } from '../lib/format'
@@ -7,6 +8,7 @@ import { EmptyState } from '../components/EmptyState'
 
 export function Cards() {
   const now = new Date()
+  const navigate = useNavigate()
   const { cards, addCard, archiveCard } = useData()
   const { byCard, totals } = useMonthData(now.getFullYear(), now.getMonth())
   const [open, setOpen] = useState(false)
@@ -45,7 +47,11 @@ export function Cards() {
             {cards.map((card) => {
               const spent = byCard.get(card.id) ?? 0
               return (
-                <div key={card.id} className="bg-surface-container-lowest border border-outline-variant p-4 rounded-2xl shadow-sm space-y-3">
+                <div
+                  key={card.id}
+                  onClick={() => navigate(`/cartoes/${card.id}`)}
+                  className="bg-surface-container-lowest border border-outline-variant p-4 rounded-2xl shadow-sm space-y-3 cursor-pointer hover:border-brand-blue/40 hover:shadow-md transition-all"
+                >
                   <div className="flex justify-between items-center">
                     <div className="flex items-center gap-3 min-w-0">
                       <div
@@ -64,14 +70,24 @@ export function Cards() {
                         </div>
                       </div>
                     </div>
-                    <div className="text-right shrink-0">
-                      <div className="font-data font-bold text-brand-red">{formatCurrency(spent)}</div>
-                      <div className="text-[10px] text-on-surface-variant">este mês</div>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <div className="text-right">
+                        <div className="font-data font-bold text-brand-red">{formatCurrency(spent)}</div>
+                        <div className="text-[10px] text-on-surface-variant">este mês</div>
+                      </div>
+                      <span className="material-symbols-outlined text-on-surface-variant text-[20px]">chevron_right</span>
                     </div>
                   </div>
-                  <div className="flex justify-end pt-2 border-t border-outline-variant">
+                  <div className="flex justify-between items-center pt-2 border-t border-outline-variant">
+                    <span className="text-[11px] text-on-surface-variant flex items-center gap-1">
+                      <span className="material-symbols-outlined text-[14px]">visibility</span>
+                      Ver detalhes e parcelas
+                    </span>
                     <button
-                      onClick={() => archiveCard(card.id)}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        archiveCard(card.id)
+                      }}
                       className="text-on-surface-variant text-xs font-bold uppercase tracking-wider hover:text-brand-red"
                     >
                       Arquivar
