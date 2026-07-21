@@ -1,0 +1,127 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Hanken Grotesk", sans-serif;
+  --font-body: "Inter", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+  --font-wordmark: "Hanken Grotesk", sans-serif;
+
+  /* Brand palette (from user's color reference) */
+  --color-brand-blue: #377EC0;
+  --color-brand-purple: #5460AC;
+  --color-brand-teal: #12BAAA;
+  --color-brand-cyan: #9FD2D6;
+  --color-brand-yellow: #FBDF54;
+  --color-brand-orange: #F7891F;
+  --color-brand-red: #F04F52;
+
+  /* Surfaces */
+  --color-background: #f7f9ff;
+  --color-surface: #f7f9ff;
+  --color-surface-bright: #f7f9ff;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f1f4fa;
+  --color-surface-container: #ebeef4;
+  --color-surface-container-high: #e5e8ee;
+  --color-surface-container-highest: #dfe3e8;
+  --color-surface-dim: #d7dae0;
+
+  /* Text / outline */
+  --color-on-background: #181c20;
+  --color-on-surface: #181c20;
+  --color-on-surface-variant: #414754;
+  --color-outline: #727785;
+  --color-outline-variant: #c1c6d6;
+
+  /* Inverse */
+  --color-inverse-surface: #2d3135;
+  --color-inverse-on-surface: #eef1f7;
+
+  --radius-card: 16px;
+}
+
+/* ---------------------------------------------------------------------
+ * Temas de estilo visual (o usuário escolhe no primeiro login e pode
+ * trocar depois em Ajustes). "Clássico" é o padrão em :root acima.
+ * "Blossom" sobrescreve as mesmas variáveis — todo o app já usa essas
+ * classes (bg-brand-red, text-brand-teal, bg-surface-container-low...)
+ * então trocar as variáveis re-estiliza o app inteiro automaticamente,
+ * sem precisar duplicar componentes.
+ * ------------------------------------------------------------------- */
+html[data-theme='blossom'] {
+  --font-wordmark: "Dancing Script", cursive;
+
+  --color-brand-blue: #C6577A;
+  --color-brand-purple: #A6779C;
+  --color-brand-teal: #6FA383;
+  --color-brand-cyan: #CFE0D2;
+  --color-brand-yellow: #E9B65F;
+  --color-brand-orange: #D98A5E;
+  --color-brand-red: #D96B7B;
+
+  --color-background: #FBF3F0;
+  --color-surface: #FBF3F0;
+  --color-surface-bright: #FBF3F0;
+  --color-surface-container-lowest: #FFFFFF;
+  --color-surface-container-low: #F7E9E4;
+  --color-surface-container: #F2DDD6;
+  --color-surface-container-high: #ECD1C8;
+  --color-surface-container-highest: #E5C4B9;
+  --color-surface-dim: #DDB6A9;
+
+  --color-on-background: #4A3230;
+  --color-on-surface: #4A3230;
+  --color-on-surface-variant: #8C6A64;
+  --color-outline: #B08A82;
+  --color-outline-variant: #EAD2C8;
+
+  --color-inverse-surface: #4A3230;
+  --color-inverse-on-surface: #FBF3F0;
+}
+
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    background-color: var(--color-background);
+    color: var(--color-on-surface);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+  }
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--color-brand-blue);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-brand-blue) 18%, transparent);
+  }
+}
+
+@layer utilities {
+  .font-data {
+    font-family: var(--font-mono);
+    font-feature-settings: "tnum";
+  }
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .scrollbar-none::-webkit-scrollbar { display: none; }
+  .scrollbar-none { scrollbar-width: none; }
+}
+
+@keyframes slide-up {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+.animate-slide-up { animation: slide-up 0.25s cubic-bezier(0.32, 0.72, 0, 1) forwards; }
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.animate-fade-in { animation: fade-in 0.15s ease-out forwards; }
+
+@keyframes pop-in {
+  from { opacity: 0; transform: scale(0.96) translateY(4px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+.animate-pop-in { animation: pop-in 0.18s cubic-bezier(0.32, 0.72, 0, 1) forwards; }
